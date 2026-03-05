@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../App';
 import { getTasksWithResponses, createTask, getResponsesForTask } from '../services/api';
 
 interface Task {
@@ -61,6 +62,7 @@ const getSpeedLabel = (time: number) => {
 };
 
 const TasksPage: React.FC = () => {
+  const { currentUser } = useContext(UserContext);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
@@ -121,13 +123,17 @@ const TasksPage: React.FC = () => {
       setError('Please enter a prompt');
       return;
     }
+    if (currentUser?.role !== 'researcher') {
+      setError('Only researchers can create tasks. Switch to a researcher account.');
+      return;
+    }
     setLoading(true);
     setError('');
     setStreamedResponses([]);
     setStreamDone(false);
 
     try {
-      const task = await createTask({ created_by: 1, prompt });
+      const task = await createTask({ created_by: currentUser?.id || 1, prompt });
       setPrompt('');
 
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../App';
 import { getTasksWithResponses, getResponsesForTask, getRatingsForResponse, createRating } from '../services/api';
 interface Task {
   id: number;
@@ -56,6 +57,7 @@ const getSpeedLabel = (time: number) => {
 };
 
 const RatingsPage: React.FC = () => {
+  const { currentUser } = useContext(UserContext);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [expandedTask, setExpandedTask] = useState<number | null>(null);
   const [responses, setResponses] = useState<{ [taskId: number]: Response[] }>({});
@@ -111,7 +113,7 @@ const RatingsPage: React.FC = () => {
     const feedback = feedbacks[responseId] || '';
     if (!score) { setError('Please select a score'); return; }
     try {
-      await createRating({ response_id: responseId, annotator_id: 2, score, feedback });
+      await createRating({ response_id: responseId, annotator_id: currentUser?.id || 2, score, feedback });
       setSuccess('Rating submitted successfully');
       setError('');
       const ratingData = await getRatingsForResponse(responseId);
