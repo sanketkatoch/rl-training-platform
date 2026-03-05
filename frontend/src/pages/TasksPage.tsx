@@ -393,7 +393,15 @@ const TasksPage: React.FC = () => {
               {task.prompt}
             </p>
             <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.78rem' }}>
-              {new Date(task.created_at).toLocaleString()}
+            {new Date(task.created_at + 'Z').toLocaleString('en-US', {
+              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+              month: 'numeric',
+              day: 'numeric',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
+            })}
             </p>
           </div>
         ))
