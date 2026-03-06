@@ -83,3 +83,13 @@ class RatingUpdate(BaseModel):
 class ResponseUpdate(BaseModel):
     response_text: str = None
     ai_model: str = None
+class TaskWithCountResponse(BaseModel):
+    id: int
+    created_by: int
+    prompt: str
+    status: str
+    created_at: datetime
+    response_count: int
+
+    class Config:
+        from_attributes = True

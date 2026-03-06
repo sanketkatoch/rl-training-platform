@@ -31,14 +31,11 @@ export const getTasks = async () => {
 };
 
 export const getTasksWithResponses = async () => {
-  const tasks = await getTasks();
-  const tasksWithResponses = await Promise.all(
-    tasks.map(async (task: any) => {
-      const responses = await getResponsesForTask(task.id);
-      return { ...task, responseCount: responses.length };
-    })
-  );
-  return tasksWithResponses.filter((t: any) => t.responseCount > 0);
+  const response = await api.get('/tasks/with-counts');
+  return response.data.map((task: any) => ({
+    ...task,
+    responseCount: task.response_count
+  }));
 };
 
 export const createTask = async (data: {

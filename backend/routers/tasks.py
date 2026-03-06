@@ -62,3 +62,21 @@ def delete_orphaned_tasks(db: Session = Depends(get_db)):
             deleted += 1
     db.commit()
     return {"deleted": deleted, "message": f"Cleaned up {deleted} orphaned tasks"}
+@router.get("/with-counts", response_model=list[schemas.TaskWithCountResponse])
+def get_tasks_with_counts(db: Session = Depends(get_db)):
+    tasks = db.query(models.Task).order_by(desc(models.Task.created_at)).all()
+    result = []
+    for task in tasks:
+        count = db.query(models.Response).filter(
+            models.Response.task_id == task.id
+        ).count()
+        if count > 0:
+            result.append({
+                "id": task.id,
+                "created_by": task.created_by,
+                "prompt": task.prompt,
+                "status": task.status,
+                "created_at": task.created_at,
+                "response_count": count
+            })
+    return result
