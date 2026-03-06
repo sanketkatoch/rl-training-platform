@@ -3,6 +3,7 @@ services:
 
   postgres:
     image: postgres:15
+    restart: always
     container_name: rl_postgres
     environment:
       POSTGRES_USER: rluser
@@ -15,6 +16,7 @@ services:
 
   redis:
     image: redis:7
+    restart: always
     container_name: rl_redis
     ports:
       - "6379:6379"
