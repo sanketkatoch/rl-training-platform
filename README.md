@@ -17,7 +17,7 @@ This directly mirrors how production RLHF pipelines work at AI labs — the diff
 ## Architecture
 
 ```
-![Architecture](docs/architecture.svg)
+![Architecture](docs/architecture.png)
 ```
 
 ---
