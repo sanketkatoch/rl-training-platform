@@ -17,27 +17,7 @@ This directly mirrors how production RLHF pipelines work at AI labs — the diff
 ## Architecture
 
 ```
-User
- │
- ▼
-React Frontend (TypeScript)          ← Deployed on Vercel
- │  REST + SSE
- ▼
-FastAPI Backend (Python)             ← Deployed on Railway
- ├── Tasks router
- ├── Ratings router
- ├── Users router
- └── Stream router (SSE endpoint)
-      │
-      ├── PostgreSQL Database        ← Railway managed Postgres
-      │    └── tasks, responses, ratings, users
-      │
-      └── AI Models (parallel via ThreadPoolExecutor)
-           ├── LLaMA 3.3 70B  (Groq)
-           ├── LLaMA 3.1 8B   (Groq)
-           ├── GPT-OSS 120B   (Groq)
-           ├── GPT-OSS 20B    (Groq)
-           └── Gemini         (Google)
+![Architecture](docs/architecture.svg)
 ```
 
 ---
